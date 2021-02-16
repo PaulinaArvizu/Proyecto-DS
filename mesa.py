@@ -10,6 +10,7 @@ class Mesa():
         a = ""
         for x in self.lista_platillos:
             a = a + x.imprimir_descripcion() + "\n"
+        return a;
     def calcular_total(self)->float:
         self.total= 0.0
         for x in self.lista_platillos:
