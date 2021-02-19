@@ -30,21 +30,21 @@ class Mesa():
         self.lista_ordenados.remove(platillo)
 
     def imprimir_platillos(self) -> str:
-        a = ""
-        for x in self.lista_ordenados:
-            a = a + x.imprimir_descripcion() + "\n"
-        return a
+        strPlatillos = ""
+        for item in self.lista_ordenados:
+            strPlatillos = strPlatillos + item.nombre + "\n" #Se quiere el platillo, no la descripcion
+        return strPlatillos 
 
     def calcular_total(self) -> float:
         self.total = 0.0
-        for x in self.lista_ordenados:
-            self.total += x.precio
-        return total
+        for item in self.lista_ordenados:
+            self.total += item.precio
+        return self.total
 
 
 class Platillo(Menu_Item):
     def preparar(self) -> bool:
-        print(f"Preparando un delicioso {self.nombre}")
+        print(f"Preparando {self.nombre}")
         return True
 
     def imprimir_descripcion(self) -> str:
@@ -53,7 +53,7 @@ class Platillo(Menu_Item):
 
 class Bebida(Menu_Item):
     def preparar(self) -> bool:
-        print(f"Sirviendo un delicioso {self.nombre}")
+        print(f"Sirviendo {self.nombre}")
         return True
 
     def imprimir_descripcion(self) -> str:
@@ -80,13 +80,13 @@ class Menu():
             self.lista_bebida.remove(bebida)
 
     def imprimir_menu(self) -> str:
-        a = "Bebidas: \n"
-        for x in self.lista_bebidas:
-            a += "   " + x.imprimir_descripcion() + "\n"
-        a += "Platillos: \n"
-        for x in self.lista_platillos:
-            a += "   " + x.imprimir_descripcion() + "\n"
-        return a
+        strMenu = "Bebidas: \n"
+        for item in self.lista_bebidas:
+            strMenu += "   " + item.nombre + "\n"
+        strMenu += "Platillos: \n"
+        for item in self.lista_platillos:
+            strMenu += "   " + item.nombre + "\n"
+        return strMenu
 
 
 if __name__ == "__main__":
@@ -112,5 +112,21 @@ if __name__ == "__main__":
     menu_pizzeria.agregar_platillo(pizza_carnes_frias)
     menu_pizzeria.agregar_bebida(cocacola)
     menu_pizzeria.agregar_bebida(fanta)
+    
+    mesa1 = Mesa()
+    mesa2 = Mesa()
+    
+    mesa1.agregar_platillo(pizza_peperoni)
+    mesa1.agregar_platillo(cocacola)
+    mesa1.agregar_platillo(cocacola)
+    
+    mesa2.agregar_platillo(pizza_carnes_frias)
+    mesa2.agregar_platillo(fanta)
+    mesa2.cancelar_platillo(pizza_carnes_frias)
+    mesa2.agregar_platillo(pizza_peperoni)
 
     print(menu_pizzeria.imprimir_menu())
+    print(mesa1.imprimir_platillos())
+    print(mesa1.calcular_total())
+    print(mesa2.imprimir_platillos())
+    print(mesa2.calcular_total())
