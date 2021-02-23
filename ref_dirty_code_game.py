@@ -1,8 +1,10 @@
 # ---------------------------------------------------------------------------------------------
 # * Equipo: N
 # Nombre de los integrantes del equipo
-# - 
-# -
+# - Paulina Arvizu
+# - Hector Silva
+# - Anahi Santana
+# - Guillermo Hernandez
 # ---------------------------------------------------------------------------------------------
 
 from __future__ import annotations
@@ -35,6 +37,7 @@ class Mochila:
     
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Hector
     # ---------------------------------------------------------------------------------------------
     # Objetivo: recoger colecciones de objetos a la mochila. Los objetos se pueden agrupar. No hace
     # falta conocer el numero de objetos. Actualmente solo es posible incluir los nombres de los
@@ -55,23 +58,27 @@ class Mochila:
 
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Anahi
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Poder guardar herramientas dentro de la mochila, pero una version de la herramienta
     # a la vez. Por ejemplo, no se puede tener un Hacha normal y un Hacha de lujo en la misma mochila.
     #
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Guillermo
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Consolidad las expresiones en las condicionales
     #
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Gillermo
     # ---------------------------------------------------------------------------------------------
     # La lógica de las condicionales parece algo compleja 
     # Objetivo: Crear métodos para el manero de las expresiones en las condicionales
     #
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Paulina
     # ---------------------------------------------------------------------------------------------
     # Existe código que se repite constantemente
     # Objetivo: Evitar duplicidad de código en cada una de las ramas de las condicionales
@@ -120,6 +127,7 @@ class Mochila:
     
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Anahi
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Reemplazar los números con variables de clase.
     # Se puede aplicar a todo el código, no solamente a este dunder method.
@@ -130,6 +138,7 @@ class Mochila:
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
+# Encargado: Hector
 # ---------------------------------------------------------------------------------------------
 # Objetivo: Agrega el metodo "demoler" con un "assert" el cual suponga que se tiene al menos
 # 1 de durabilidad antes de ejecutar la acción.
@@ -185,6 +194,7 @@ class Fogata:
 
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Paulina
     # ---------------------------------------------------------------------------------------------
     # Los alimentos tienen diferentes tiempos de cocción. No queremos tener condicionales, entonces
     # usamos refactorización. Se ha comentado parte del código original.
@@ -226,6 +236,7 @@ if __name__ == '__main__':
 
     # ---------------------------------------------------------------------------------------------
     # * RETO
+    # Encargado: Anahi
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Agregar al menos dos alimentos que se puedan cocinar en la fogata. Crear una fogata,
     # Cocinar los alimentos en la fogata y comer los alimentos.
