@@ -30,6 +30,8 @@ class Mochila:
     '''
     La mochila tiene la capacidad de guardar un número limitado de artículos
     '''
+    ESPACIADO_IMPRIMIR = 50
+    
     def __init__(self, nombre, max_items:int=5):
         self.nombre = nombre
         self._max_items = max_items
@@ -57,7 +59,7 @@ class Mochila:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
 
     # ---------------------------------------------------------------------------------------------
-    # * RETO
+    # * RETO - 
     # Encargado: Anahi
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Poder guardar herramientas dentro de la mochila, pero una version de la herramienta
@@ -118,7 +120,7 @@ class Mochila:
 
     
     # ---------------------------------------------------------------------------------------------
-    # * RETO
+    # * RETO - Replace magic number with symbolic constant
     # Encargado: Anahi
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Reemplazar los números con variables de clase.
@@ -126,7 +128,7 @@ class Mochila:
     #
     def __str__(self) -> str:
         list_items = '\n'.join(self.items)
-        return f'''{self.nombre:^50}\n{"="*50}\n{list_items}'''
+        return f'''{self.nombre:^self.ESPACIADO_IMPRIMIR}\n{"="*self.ESPACIADO_IMPRIMIR}\n{list_items}'''
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
