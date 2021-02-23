@@ -91,39 +91,31 @@ class Mochila:
         if herramienta == 'martillo' and self.items.count('ramita') >= 3 and self.items.count('roca') >= 3 and self.items.count('cuerda') >= 2:
             herramienta = Martillo()
             self.recoger(str(herramienta))
-            self.items.remove('ramita')
-            self.items.remove('ramita')
-            self.items.remove('ramita')
-            self.items.remove('roca')
-            self.items.remove('roca')
-            self.items.remove('roca')
-            self.items.remove('cuerda')
-            self.items.remove('cuerda')
+            self.quitar_item('ramita', 3)
+            self.quitar_item('roca', 3)
+            self.quitar_item('cuerda', 2)
             return True
-        else:
-            return False
 
         if herramienta == 'hacha' and self.items.count('ramita') >= 1 and self.items.count('pedernal') >= 1:
             herramienta = Hacha()
             self.recoger(str(herramienta))
-            self.items.remove('ramita')
-            self.items.remove('pedernal')
+            self.quitar_item('ramita', 1)
+            self.quitar_item('pedernal', 1)
             return True
-        else:
-            return False
 
         if herramienta == 'hacha_lujo' and self.items.count('ramita') >= 4 and self.items.count('pepita oro') >= 2:
             herramienta = HachaLujo()
             self.recoger(str(herramienta))
-            self.items.remove('ramita')
-            self.items.remove('ramita')
-            self.items.remove('ramita')
-            self.items.remove('ramita')
-            self.items.remove('pepita oro')
-            self.items.remove('pepita oro')
+            self.quitar_item('ramita', 4)
+            self.quitar_item('pepita oro', 2)
             return True
         else:
             return False
+    
+    def quitar_item(self, item, cantidad):
+        for i in range(cantidad):
+            self.items().remove(item)
+
     
     # ---------------------------------------------------------------------------------------------
     # * RETO
@@ -206,6 +198,15 @@ class Fogata:
     # usamos refactorización. Se ha comentado parte del código original.
     # Objetivo: Usar polimorfismo para obtener el tiempo de cocción y simplificar el método. Trata de
     # usar una interface con al menos los atributos: nombre, tiempo_coccion, cocido
+
+    class Alimento(ABC):
+        def __init__(self, nombre, tiempo_coccion):
+            self.nombre = nombre
+            self.tiempo_coccion = tiempo_coccion
+            self.cocido = False
+        def tiempo_coccion(self):
+            return self.tiempo_coccion
+
     def cocinar(self, alimento:object) -> None:
         '''
         Permite cocinar un alimento crudo en la fogata. Regresa el mismo alimento pero cocinado.
