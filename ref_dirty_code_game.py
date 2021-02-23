@@ -155,6 +155,12 @@ class Martillo:
 
     def __str__(self) -> str:
         return 'Martillo'
+    
+    def demoler(self) -> bool:
+        self.durabilidad = self.durabilidad-1
+        assert self.durabilidad > 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
+        return True
+        
 
 class Hacha:
     '''
