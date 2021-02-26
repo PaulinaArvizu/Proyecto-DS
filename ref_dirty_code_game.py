@@ -24,7 +24,12 @@ class Personaje:
         self.vida += alimento.aporte_vida
 
 class Alimento(ABC):
-    pass
+    def __init__(self, nombre, tiempo_coccion):
+        self.nombre = nombre
+        self.tiempo_coccion = tiempo_coccion
+        self.cocido = False
+    def tiempo_coccion(self):
+        return self.tiempo_coccion
 
 class Mochila:
     '''
@@ -239,14 +244,6 @@ class Fogata:
     # Objetivo: Usar polimorfismo para obtener el tiempo de cocción y simplificar el método. Trata de
     # usar una interface con al menos los atributos: nombre, tiempo_coccion, cocido
 
-    class Alimento(ABC):
-        def __init__(self, nombre, tiempo_coccion):
-            self.nombre = nombre
-            self.tiempo_coccion = tiempo_coccion
-            self.cocido = False
-        def tiempo_coccion(self):
-            return self.tiempo_coccion
-
     def cocinar(self, alimento:object) -> None:
         '''
         Permite cocinar un alimento crudo en la fogata. Regresa el mismo alimento pero cocinado.
@@ -257,8 +254,10 @@ class Fogata:
         #     sleep(5)
 
         if alimento.cocido == False:
+            print(f'cocinando {alimento.nombre}')
             sleep(alimento.tiempo_coccion)
             alimento.cocido = True
+            print(f'{alimento.nombre} cocido')
 
 if __name__ == '__main__':
     # Personajes
@@ -283,6 +282,8 @@ if __name__ == '__main__':
     backpack.fabricar('hacha')
     backpack.fabricar('hacha_lujo')
 
+    print(backpack)
+
     # ---------------------------------------------------------------------------------------------
     # * RETO
     # Encargado: Anahi
@@ -290,8 +291,10 @@ if __name__ == '__main__':
     # Objetivo: Agregar al menos dos alimentos que se puedan cocinar en la fogata. Crear una fogata,
     # Cocinar los alimentos en la fogata y comer los alimentos.
     # 
-    malvavisco = Alimento()
+    malvavisco = Alimento('malvavisco', 2)
+    beef = Alimento('beef', 5)
     hoguera = Fogata()
-    #hoguera.cocinar(malvavisco)
+    hoguera.cocinar(malvavisco)
+    hoguera.cocinar(beef)
     # Listamos los articulos en nuestra mochila
     print(backpack)
