@@ -49,16 +49,27 @@ class Mochila:
     #  - palitos x 5
     #  - rocas x 4
     #
-    def recoger(self, nombre:str) -> None:
+    def recoger(self, nombre:str) -> bool:
         '''
         Ingresa articulos en la mochila
         '''
         if len(self.items) < self._max_items:
-            for x in range(len(self.items)):
-                if self.items[x][0] == nombre:
-                    self.items[x][1] == self.items[x][1] + 1
-                else:
-                    self.items[x].append([nombre, 1])
+            # print('Se quiere agregar ' + nombre)
+            if len(self.items) < 1:
+                self.items.append([nombre, 1])
+                # print('se agrega primer objeto recogido')
+                # print(self.items)
+                return True
+            else:
+                for x in range(len(self.items)):
+                    if self.items[x][0] == nombre:
+                        self.items[x][1] = self.items[x][1] + 1
+                        #print(self.items[x])
+                        return True
+                #No lo encuentra en la mochila y genera uno nueva
+                self.items.append([nombre, 1])
+                # print(self.items)
+                return True
         else:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
 
@@ -248,6 +259,8 @@ if __name__ == '__main__':
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
+    
+    print(backpack)
 
     # Fabrica
     backpack.fabricar('martillo')
