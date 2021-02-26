@@ -41,7 +41,8 @@ class Mochila:
         self.nombre = nombre
         self._max_items = max_items
         self.items = []
-    
+        self.tipo_hacha = ''
+        self.tipo_martillo = ''
     # ---------------------------------------------------------------------------------------------
     # * RETO
     # Encargado: Hector
@@ -111,28 +112,26 @@ class Mochila:
         fabricar la herramienta
         '''
         if herramienta == 'martillo' and self.es_fabricable('martillo'):
-            herramienta = Martillo()
-            self.recoger(str(herramienta))
+            self.tipo_martillo = Martillo()
             self.quitar_item('ramita', 3)
             self.quitar_item('roca', 3)
             self.quitar_item('cuerda', 2)
             return True
 
         if herramienta == 'hacha' and self.es_fabricable('hacha'):
-            herramienta = Hacha()
-            self.recoger(str(herramienta))
+            self.tipo_hacha = Hacha()
             self.quitar_item('ramita', 1)
             self.quitar_item('pedernal', 1)
             return True
 
         if herramienta == 'hacha_lujo' and self.es_fabricable('hacha_lujo'):
-            herramienta = HachaLujo()
-            self.recoger(str(herramienta))
+            self.tipo_hacha = HachaLujo()
             self.quitar_item('ramita', 4)
             self.quitar_item('pepita oro', 2)
             return True
         else:
             return False
+    
     
     def quitar_item(self, item, cantidad):
          for x in self.items:
@@ -165,11 +164,15 @@ class Mochila:
     # Se puede aplicar a todo el código, no solamente a este dunder method.
     #
     def __str__(self) -> str:
-        list_items = ''
+        
+        mochila_str=  f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n'''
+        herramientas = f'''-Herramientas:\n   {self.tipo_hacha}\n   {self.tipo_martillo}'''
+        materiales = '-Materiales:\n'
+
         for i in self.items:
-            list_items += i[0] + ' x' + str(i[1]) + '\n'
+            materiales += '   ' + i[0] + ' x' + str(i[1]) + '\n'
             
-        return f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n{list_items}'''
+        return  mochila_str + materiales + herramientas
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
@@ -279,13 +282,29 @@ if __name__ == '__main__':
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
-    
     print(backpack)
 
     # Fabrica
     backpack.fabricar('martillo')
-    #backpack.fabricar('hacha')
-    #backpack.fabricar('hacha_lujo')
+
+    #Items 
+    backpack.recoger('ramita')
+    backpack.recoger('pedernal')
+    print(backpack)
+    #Fabrica
+    backpack.fabricar('hacha')
+    print(backpack)
+
+    #Items 
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('pepita oro')
+    backpack.recoger('pepita oro')
+    print(backpack)
+
+    backpack.fabricar('hacha_lujo')
 
     print(backpack)
 
