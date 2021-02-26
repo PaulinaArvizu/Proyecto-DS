@@ -110,7 +110,7 @@ class Mochila:
         Fabricar herramientas a través de los artículos en tu inventario. Regresa True si se pudo
         fabricar la herramienta
         '''
-        if herramienta == 'martillo' and self.items.count('ramita') >= 3 and self.items.count('roca') >= 3 and self.items.count('cuerda') >= 2:
+        if herramienta == 'martillo' and self.es_fabricable('martillo'):
             herramienta = Martillo()
             self.recoger(str(herramienta))
             self.quitar_item('ramita', 3)
@@ -118,14 +118,14 @@ class Mochila:
             self.quitar_item('cuerda', 2)
             return True
 
-        if herramienta == 'hacha' and self.items.count('ramita') >= 1 and self.items.count('pedernal') >= 1:
+        if herramienta == 'hacha' and self.es_fabricable('hacha'):
             herramienta = Hacha()
             self.recoger(str(herramienta))
             self.quitar_item('ramita', 1)
             self.quitar_item('pedernal', 1)
             return True
 
-        if herramienta == 'hacha_lujo' and self.items.count('ramita') >= 4 and self.items.count('pepita oro') >= 2:
+        if herramienta == 'hacha_lujo' and self.es_fabricable('hacha_lujo'):
             herramienta = HachaLujo()
             self.recoger(str(herramienta))
             self.quitar_item('ramita', 4)
@@ -137,6 +137,22 @@ class Mochila:
     def quitar_item(self, item, cantidad):
         for i in range(cantidad):
             self.items.remove(item)
+
+    def contar_item(self, item):
+        for x in range(len(self.items)):
+            if self.items[x][0] == item:
+                return self.items[x][1]
+        return 0
+
+    def es_fabricable(self, herramienta) -> bool:
+        if herramienta == 'martillo':
+            return self.contar_item('ramita') >= 3 and self.contar_item('roca') >= 3 and self.contar_item('cuerda') >= 2
+        if herramienta == 'hacha':
+            return self.contar_item('ramita') >= 1 and self.contar_item('pedernal') >= 1
+        if herramienta == 'hacha_lujo':
+            return self.items.count('ramita') >= 4 and self.items.count('pepita oro') >= 2
+        return False
+
 
     
     # ---------------------------------------------------------------------------------------------
