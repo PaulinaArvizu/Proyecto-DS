@@ -24,7 +24,12 @@ class Personaje:
         self.vida += alimento.aporte_vida
 
 class Alimento(ABC):
-    pass
+    def __init__(self, nombre, tiempo_coccion):
+        self.nombre = nombre
+        self.tiempo_coccion = tiempo_coccion
+        self.cocido = False
+    def tiempo_coccion(self):
+        return self.tiempo_coccion
 
 class Mochila:
     '''
@@ -49,17 +54,27 @@ class Mochila:
     #  - palitos x 5
     #  - rocas x 4
     #
-    def recoger(self, nombre:str) -> None:
+    def recoger(self, nombre:str) -> bool:
         '''
         Ingresa articulos en la mochila
         '''
         if len(self.items) < self._max_items:
-            self.items.append(nombre)
-            # for x in range(len(self.items)):
-            #     if self.items[x][0] == nombre:
-            #         self.items[x][1] == self.items[x][1] + 1
-            #     else:
-            #         self.items[x].append([nombre, 1])
+            # print('Se quiere agregar ' + nombre)
+            if len(self.items) < 1:
+                self.items.append([nombre, 1])
+                # print('se agrega primer objeto recogido')
+                # print(self.items)
+                return True
+            else:
+                for x in range(len(self.items)):
+                    if self.items[x][0] == nombre:
+                        self.items[x][1] = self.items[x][1] + 1
+                        #print(self.items[x])
+                        return True
+                #No lo encuentra en la mochila y genera uno nueva
+                self.items.append([nombre, 1])
+                # print(self.items)
+                return True
         else:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
 
@@ -156,8 +171,8 @@ class Martillo:
         return 'Martillo'
     
     def demoler(self) -> bool:
-        self.durabilidad = self.durabilidad-1
         assert self.durabilidad >= 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
+        self.durabilidad = self.durabilidad-1
         return True
         
 class TipoHacha(ABC):
@@ -213,14 +228,6 @@ class Fogata:
     # Objetivo: Usar polimorfismo para obtener el tiempo de cocción y simplificar el método. Trata de
     # usar una interface con al menos los atributos: nombre, tiempo_coccion, cocido
 
-    class Alimento(ABC):
-        def __init__(self, nombre, tiempo_coccion):
-            self.nombre = nombre
-            self.tiempo_coccion = tiempo_coccion
-            self.cocido = False
-        def tiempo_coccion(self):
-            return self.tiempo_coccion
-
     def cocinar(self, alimento:object) -> None:
         '''
         Permite cocinar un alimento crudo en la fogata. Regresa el mismo alimento pero cocinado.
@@ -231,8 +238,10 @@ class Fogata:
         #     sleep(5)
 
         if alimento.cocido == False:
+            print(f'cocinando {alimento.nombre}')
             sleep(alimento.tiempo_coccion)
             alimento.cocido = True
+            print(f'{alimento.nombre} cocido')
 
 if __name__ == '__main__':
     # Personajes
@@ -249,11 +258,15 @@ if __name__ == '__main__':
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
+    
+    print(backpack)
 
     # Fabrica
     backpack.fabricar('martillo')
     backpack.fabricar('hacha')
     backpack.fabricar('hacha_lujo')
+
+    print(backpack)
 
     # ---------------------------------------------------------------------------------------------
     # * RETO
@@ -262,8 +275,10 @@ if __name__ == '__main__':
     # Objetivo: Agregar al menos dos alimentos que se puedan cocinar en la fogata. Crear una fogata,
     # Cocinar los alimentos en la fogata y comer los alimentos.
     # 
-    malvavisco = Alimento()
+    malvavisco = Alimento('malvavisco', 2)
+    beef = Alimento('beef', 5)
     hoguera = Fogata()
-    #hoguera.cocinar(malvavisco)
+    hoguera.cocinar(malvavisco)
+    hoguera.cocinar(beef)
     # Listamos los articulos en nuestra mochila
     print(backpack)
