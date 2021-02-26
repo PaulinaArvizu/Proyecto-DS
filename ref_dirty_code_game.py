@@ -36,6 +36,8 @@ class Mochila:
         self.nombre = nombre
         self._max_items = max_items
         self.items = []
+        self.tipo_hacha = ''
+        self.tipo_martillo = ''
     
     # ---------------------------------------------------------------------------------------------
     # * RETO
@@ -91,23 +93,20 @@ class Mochila:
         fabricar la herramienta
         '''
         if herramienta == 'martillo' and self.items.count('ramita') >= 3 and self.items.count('roca') >= 3 and self.items.count('cuerda') >= 2:
-            herramienta = Martillo()
-            self.recoger(str(herramienta))
+            self.tipo_martillo = Martillo()
             self.quitar_item('ramita', 3)
             self.quitar_item('roca', 3)
             self.quitar_item('cuerda', 2)
             return True
 
         if herramienta == 'hacha' and self.items.count('ramita') >= 1 and self.items.count('pedernal') >= 1:
-            herramienta = Hacha()
-            self.recoger(str(herramienta))
+            self.tipo_hacha = Hacha()
             self.quitar_item('ramita', 1)
             self.quitar_item('pedernal', 1)
             return True
 
         if herramienta == 'hacha_lujo' and self.items.count('ramita') >= 4 and self.items.count('pepita oro') >= 2:
-            herramienta = HachaLujo()
-            self.recoger(str(herramienta))
+            self.tipo_hacha = HachaLujo()
             self.quitar_item('ramita', 4)
             self.quitar_item('pepita oro', 2)
             return True
@@ -128,7 +127,9 @@ class Mochila:
     #
     def __str__(self) -> str:
         list_items = '\n'.join(self.items)
-        return f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n{list_items}'''
+        return f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}
+        -Materiales:\n{list_items}
+        -Herramientas:\n{self.tipo_hacha}\n{self.tipo_martillo}'''
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
@@ -244,11 +245,20 @@ if __name__ == '__main__':
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
-
+    print(backpack)
+    
     # Fabrica
     backpack.fabricar('martillo')
+
+    #Itemas 
+    backpack.recoger('ramita')
+    backpack.recoger('roca')
+
+    #Fabrica
     backpack.fabricar('hacha')
     backpack.fabricar('hacha_lujo')
+
+
 
     # ---------------------------------------------------------------------------------------------
     # * RETO
