@@ -35,7 +35,7 @@ class Mochila:
     '''
     La mochila tiene la capacidad de guardar un número limitado de artículos
     '''
-    ESPACIADO_IMPRIMIR  = 70
+    ESPACIADO_IMPRIMIR  = 40
     
     def __init__(self, nombre, max_items:int=5):
         self.nombre = nombre
@@ -58,26 +58,26 @@ class Mochila:
         '''
         Ingresa articulos en la mochila
         '''
-        if len(self.items) < self._max_items:
-            # print('Se quiere agregar ' + nombre)
+        if self.has_capacity():
             if len(self.items) < 1:
                 self.items.append([nombre, 1])
-                # print('se agrega primer objeto recogido')
-                # print(self.items)
                 return True
             else:
-                for x in range(len(self.items)):
-                    if self.items[x][0] == nombre:
-                        self.items[x][1] = self.items[x][1] + 1
-                        #print(self.items[x])
+                for x in self.items:
+                    if x[0] == nombre:
+                        x[1] += 1
                         return True
                 #No lo encuentra en la mochila y genera uno nueva
                 self.items.append([nombre, 1])
-                # print(self.items)
                 return True
         else:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
-
+    
+    def has_capacity(self) -> bool:
+        cuenta = 0;
+        for x in self.items:
+            cuenta += x[1]
+        return cuenta < self._max_items
     # ---------------------------------------------------------------------------------------------
     # * RETO -  Replace type code with state/strategy
     # Encargado: Anahi
@@ -135,13 +135,15 @@ class Mochila:
             return False
     
     def quitar_item(self, item, cantidad):
-        for i in range(cantidad):
-            self.items.remove(item)
+         for x in self.items:
+            if x[0] == item:
+                x[1] -= cantidad
+
 
     def contar_item(self, item):
-        for x in range(len(self.items)):
-            if self.items[x][0] == item:
-                return self.items[x][1]
+        for x in self.items:
+            if x[0] == item:
+                return x[1]
         return 0
 
     def es_fabricable(self, herramienta) -> bool:
@@ -163,7 +165,10 @@ class Mochila:
     # Se puede aplicar a todo el código, no solamente a este dunder method.
     #
     def __str__(self) -> str:
-        list_items = '\n'.join(self.items)
+        list_items = ''
+        for i in self.items:
+            list_items += i[0] + ' x' + str(i[1]) + '\n'
+            
         return f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n{list_items}'''
 
 # ---------------------------------------------------------------------------------------------
@@ -279,8 +284,8 @@ if __name__ == '__main__':
 
     # Fabrica
     backpack.fabricar('martillo')
-    backpack.fabricar('hacha')
-    backpack.fabricar('hacha_lujo')
+    #backpack.fabricar('hacha')
+    #backpack.fabricar('hacha_lujo')
 
     print(backpack)
 
