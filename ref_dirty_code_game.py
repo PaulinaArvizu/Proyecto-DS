@@ -246,16 +246,28 @@ if __name__ == '__main__':
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
     print(backpack)
-    
+
     # Fabrica
     backpack.fabricar('martillo')
 
     #Itemas 
     backpack.recoger('ramita')
-    backpack.recoger('roca')
-
+    backpack.recoger('pedernal')
+    print(backpack)
     #Fabrica
     backpack.fabricar('hacha')
+    print(backpack)
+
+    #Itemas 
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('pepita oro')
+    backpack.recoger('pepita oro')
+    backpack.recoger('pepita oro')
+    print(backpack)
+
     backpack.fabricar('hacha_lujo')
 
 
