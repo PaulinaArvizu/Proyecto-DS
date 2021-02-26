@@ -132,11 +132,13 @@ class Mochila:
         else:
             return False
     
-    
+
     def quitar_item(self, item, cantidad):
          for x in self.items:
             if x[0] == item:
                 x[1] -= cantidad
+                if x[1] == 0:
+                    self.items.remove(x)
 
 
     def contar_item(self, item):
@@ -151,7 +153,7 @@ class Mochila:
         if herramienta == 'hacha':
             return self.contar_item('ramita') >= 1 and self.contar_item('pedernal') >= 1
         if herramienta == 'hacha_lujo':
-            return self.items.count('ramita') >= 4 and self.items.count('pepita oro') >= 2
+            return self.contar_item('ramita') >= 4 and self.contar_item('pepita oro') >= 2
         return False
 
 
