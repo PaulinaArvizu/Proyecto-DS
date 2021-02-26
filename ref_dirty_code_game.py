@@ -55,6 +55,11 @@ class Mochila:
         '''
         if len(self.items) < self._max_items:
             self.items.append(nombre)
+            # for x in range(len(self.items)):
+            #     if self.items[x][0] == nombre:
+            #         self.items[x][1] == self.items[x][1] + 1
+            #     else:
+            #         self.items[x].append([nombre, 1])
         else:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
 
@@ -152,7 +157,7 @@ class Martillo:
     
     def demoler(self) -> bool:
         self.durabilidad = self.durabilidad-1
-        assert self.durabilidad > 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
+        assert self.durabilidad >= 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
         return True
         
 
