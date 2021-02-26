@@ -30,7 +30,7 @@ class Mochila:
     '''
     La mochila tiene la capacidad de guardar un número limitado de artículos
     '''
-    ESPACIADO_IMPRIMIR = 50
+    ESPACIADO_IMPRIMIR  = 70
     
     def __init__(self, nombre, max_items:int=5):
         self.nombre = nombre
@@ -63,7 +63,7 @@ class Mochila:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
 
     # ---------------------------------------------------------------------------------------------
-    # * RETO - 
+    # * RETO -  Replace type code with state/strategy
     # Encargado: Anahi
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Poder guardar herramientas dentro de la mochila, pero una version de la herramienta
@@ -120,7 +120,7 @@ class Mochila:
     
     def quitar_item(self, item, cantidad):
         for i in range(cantidad):
-            self.items().remove(item)
+            self.items.remove(item)
 
     
     # ---------------------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ class Mochila:
     #
     def __str__(self) -> str:
         list_items = '\n'.join(self.items)
-        return f'''{self.nombre:^self.ESPACIADO_IMPRIMIR}\n{"="*self.ESPACIADO_IMPRIMIR}\n{list_items}'''
+        return f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n{list_items}'''
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
@@ -159,8 +159,15 @@ class Martillo:
         self.durabilidad = self.durabilidad-1
         return True
         
+class TipoHacha(ABC):
+    def __init__(self, durabilidad, daño):
+        self.durabilidad = durabilidad
+        self.daño = daño
+    
+    def __str__(self) -> str:
+        return 'Hacha'
 
-class Hacha:
+class Hacha(TipoHacha):
     '''
     El hacha es una herramienta que se puede utilizar para talar árboles. Se puede crear
     al comienzo del juego con 1 ramita y 1 pedernal.
@@ -172,7 +179,7 @@ class Hacha:
     def __str__(self) -> str:
         return 'Hacha normal'
 
-class HachaLujo:
+class HachaLujo(TipoHacha):
     '''
     El Hacha de lujo es una versión del Hacha normal que tiene cuatro veces más durabilidad
     y requiere pepitas de oro en lugar de pedernal. Se necesitan 4 ramitas y 2 pepitas de oro
@@ -254,6 +261,8 @@ if __name__ == '__main__':
     # Objetivo: Agregar al menos dos alimentos que se puedan cocinar en la fogata. Crear una fogata,
     # Cocinar los alimentos en la fogata y comer los alimentos.
     # 
-
+    malvavisco = Alimento()
+    hoguera = Fogata()
+    #hoguera.cocinar(malvavisco)
     # Listamos los articulos en nuestra mochila
     print(backpack)
