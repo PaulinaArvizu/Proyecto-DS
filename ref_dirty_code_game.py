@@ -173,10 +173,14 @@ class Mochila:
     # Se puede aplicar a todo el código, no solamente a este dunder method.
     #
     def __str__(self) -> str:
-        list_items = '\n'.join(self.items)
-        return f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}
-        -Materiales:\n{list_items}
-        -Herramientas:\n{self.tipo_hacha}\n{self.tipo_martillo}'''
+        mochila_str=  f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n'''
+        herramientas = f'''-Herramientas:\n   {self.tipo_hacha}\n   {self.tipo_martillo}'''
+        materiales = '-Materiales:\n'
+
+        for i in self.items:
+            materiales += '   ' + i[0] + ' x' + str(i[1]) + '\n'
+
+        return  mochila_str + materiales + herramientas
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
