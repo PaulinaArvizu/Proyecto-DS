@@ -51,7 +51,7 @@ class Mochila:
         self.tipo_martillo = ''
     
     # ---------------------------------------------------------------------------------------------
-    # * RETO
+    # * RETO - Replace data value with object
     # Encargado: Hector
     # ---------------------------------------------------------------------------------------------
     # Objetivo: recoger colecciones de objetos a la mochila. Los objetos se pueden agrupar. No hace
@@ -68,7 +68,7 @@ class Mochila:
         '''
         if self.has_capacity():
             if len(self.items) < 1:
-                self.items.append([nombre, 1])
+                self.items.append([nombre, 1]) #Antes era string ahora es List
                 return True
             else:
                 for x in self.items:
@@ -107,7 +107,7 @@ class Mochila:
     # Objetivo: Crear métodos para el manero de las expresiones en las condicionales
     #
     # ---------------------------------------------------------------------------------------------
-    # * RETO
+    # * RETO - Consolidate Duplicate Conditional Fragments
     # Encargado: Paulina
     # ---------------------------------------------------------------------------------------------
     # Existe código que se repite constantemente
@@ -184,7 +184,7 @@ class Mochila:
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
-# Encargado: Hector
+# Encargado: Hector - Introduce Assertion
 # ---------------------------------------------------------------------------------------------
 # Objetivo: Agrega el metodo "demoler" con un "assert" el cual suponga que se tiene al menos
 # 1 de durabilidad antes de ejecutar la acción.
@@ -263,7 +263,7 @@ class Fogata:
         pass
 
     # ---------------------------------------------------------------------------------------------
-    # * RETO
+    # * RETO - Consolidate Conditional with Polymorphism
     # Encargado: Paulina
     # ---------------------------------------------------------------------------------------------
     # Los alimentos tienen diferentes tiempos de cocción. No queremos tener condicionales, entonces
