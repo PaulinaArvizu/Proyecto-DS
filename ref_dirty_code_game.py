@@ -87,13 +87,13 @@ class Mochila:
     # a la vez. Por ejemplo, no se puede tener un Hacha normal y un Hacha de lujo en la misma mochila.
     #
     # ---------------------------------------------------------------------------------------------
-    # * RETO
+    # * RETO - Consolidate Conditional Expresion
     # Encargado: Guillermo
     # ---------------------------------------------------------------------------------------------
     # Objetivo: Consolidad las expresiones en las condicionales
     #
     # ---------------------------------------------------------------------------------------------
-    # * RETO
+    # * RETO - Consolidate Conditional Expresion
     # Encargado: Gillermo
     # ---------------------------------------------------------------------------------------------
     # La lógica de las condicionales parece algo compleja 
