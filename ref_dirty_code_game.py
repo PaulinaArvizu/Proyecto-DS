@@ -10,6 +10,7 @@
 from __future__ import annotations
 from abc import ABC
 from time import sleep
+from enum import Enum
 
 class Personaje:
     def __init__(self, nombre:str):
@@ -24,19 +25,30 @@ class Personaje:
         self.vida += alimento.aporte_vida
 
 class Alimento(ABC):
-    pass
+    def __init__(self, nombre, tiempo_coccion):
+        self.nombre = nombre
+        self.tiempo_coccion = tiempo_coccion
+        self.cocido = False
+    def tiempo_coccion(self):
+        return self.tiempo_coccion
+
+class HerramientaType(Enum): #Para eliminar los strings de herramientas, podria ser de valor hacerlo tambien para los materiales/items
+    HACHA_LUJO = "hacha_lujo"
+    HACHA = "hacha"
+    MARTILLO = "martillo"
 
 class Mochila:
     '''
     La mochila tiene la capacidad de guardar un número limitado de artículos
     '''
-    ESPACIADO_IMPRIMIR  = 70
+    ESPACIADO_IMPRIMIR  = 40
     
     def __init__(self, nombre, max_items:int=5):
         self.nombre = nombre
         self._max_items = max_items
         self.items = []
-    
+        self.tipo_hacha = ''
+        self.tipo_martillo = ''
     # ---------------------------------------------------------------------------------------------
     # * RETO
     # Encargado: Hector
@@ -53,26 +65,26 @@ class Mochila:
         '''
         Ingresa articulos en la mochila
         '''
-        if len(self.items) < self._max_items:
-            # print('Se quiere agregar ' + nombre)
+        if self.has_capacity():
             if len(self.items) < 1:
                 self.items.append([nombre, 1])
-                # print('se agrega primer objeto recogido')
-                # print(self.items)
                 return True
             else:
-                for x in range(len(self.items)):
-                    if self.items[x][0] == nombre:
-                        self.items[x][1] = self.items[x][1] + 1
-                        #print(self.items[x])
+                for x in self.items:
+                    if x[0] == nombre:
+                        x[1] += 1
                         return True
                 #No lo encuentra en la mochila y genera uno nueva
                 self.items.append([nombre, 1])
-                # print(self.items)
                 return True
         else:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
-
+    
+    def has_capacity(self) -> bool:
+        cuenta = 0
+        for x in self.items:
+            cuenta += x[1]
+        return cuenta < self._max_items
     # ---------------------------------------------------------------------------------------------
     # * RETO -  Replace type code with state/strategy
     # Encargado: Anahi
@@ -100,38 +112,53 @@ class Mochila:
     # Existe código que se repite constantemente
     # Objetivo: Evitar duplicidad de código en cada una de las ramas de las condicionales
     #
-    def fabricar(self, herramienta) -> bool:
+    def fabricar(self, herramienta:Herramienta) -> bool:
         '''
         Fabricar herramientas a través de los artículos en tu inventario. Regresa True si se pudo
         fabricar la herramienta
         '''
-        if herramienta == 'martillo' and self.items.count('ramita') >= 3 and self.items.count('roca') >= 3 and self.items.count('cuerda') >= 2:
-            herramienta = Martillo()
-            self.recoger(str(herramienta))
-            self.quitar_item('ramita', 3)
-            self.quitar_item('roca', 3)
-            self.quitar_item('cuerda', 2)
-            return True
-
-        if herramienta == 'hacha' and self.items.count('ramita') >= 1 and self.items.count('pedernal') >= 1:
-            herramienta = Hacha()
-            self.recoger(str(herramienta))
-            self.quitar_item('ramita', 1)
-            self.quitar_item('pedernal', 1)
-            return True
-
-        if herramienta == 'hacha_lujo' and self.items.count('ramita') >= 4 and self.items.count('pepita oro') >= 2:
-            herramienta = HachaLujo()
-            self.recoger(str(herramienta))
-            self.quitar_item('ramita', 4)
-            self.quitar_item('pepita oro', 2)
-            return True
-        else:
+        
+        materiales = herramienta.materiales
+        
+        if not (self.es_fabricable(materiales)):
             return False
+        
+        self.recoger(str(herramienta))
+        for material in materiales:
+            self.quitar_item(material[0], material[1])
+        return True
+        
     
+
     def quitar_item(self, item, cantidad):
-        for i in range(cantidad):
-            self.items.remove(item)
+         for x in self.items:
+            if x[0] == item:
+                x[1] -= cantidad
+                if x[1] == 0:
+                    self.items.remove(x)
+
+
+    def contar_item(self, item):
+        for x in self.items:
+            if x[0] == item:
+                return x[1]
+        return 0
+
+    def es_fabricable(self, materiales) -> bool:
+        
+        for material in materiales:
+            if self.contar_item(material[0]) < material[1]:
+                return False
+        return True
+        
+        # if herramienta == HerramientaType.MARTILLO:
+        #     return self.contar_item('ramita') >= 3 and self.contar_item('roca') >= 3 and self.contar_item('cuerda') >= 2
+        # if herramienta == HerramientaType.HACHA:
+        #     return self.contar_item('ramita') >= 1 and self.contar_item('pedernal') >= 1
+        # if herramienta == HerramientaType.HACHA_LUJO:
+        #     return self.contar_item('ramita') >= 4 and self.contar_item('pepita oro') >= 2
+        # return False
+
 
     
     # ---------------------------------------------------------------------------------------------
@@ -142,8 +169,15 @@ class Mochila:
     # Se puede aplicar a todo el código, no solamente a este dunder method.
     #
     def __str__(self) -> str:
-        list_items = '\n'.join(self.items)
-        return f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n{list_items}'''
+        
+        mochila_str=  f'''{self.nombre:^{self.ESPACIADO_IMPRIMIR}} \n{"="*self.ESPACIADO_IMPRIMIR}\n'''
+        herramientas = f'''-Herramientas:\n   {self.tipo_hacha}\n   {self.tipo_martillo}'''
+        materiales = '-Materiales:\n'
+
+        for i in self.items:
+            materiales += '   ' + i[0] + ' x' + str(i[1]) + '\n'
+            
+        return  mochila_str + materiales + herramientas
 
 # ---------------------------------------------------------------------------------------------
 # * RETO
@@ -152,53 +186,64 @@ class Mochila:
 # Objetivo: Agrega el metodo "demoler" con un "assert" el cual suponga que se tiene al menos
 # 1 de durabilidad antes de ejecutar la acción.
 #
-class Martillo:
+
+class Herramienta(ABC): #Es mejor hacer una clase herramienta que solo un TipoHacha
+    def __init__(self, durabilidad, daño):
+        self.tipo = ''
+        self.durabilidad = durabilidad
+        self.daño = daño
+        self.materiales = []
+    
+    def __str__(self) -> str:
+        return 'Herramienta'
+    
+    def demoler(self) -> bool:
+        assert self.durabilidad >= 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
+        self.durabilidad = self.durabilidad-1
+        return True
+    
+    
+class Martillo(Herramienta):
     '''
     El martillo es una herramienta que se puede utilizar para demoler estructuras.
     El martillo requiere 3 rocas, 3 ramitas y 2 cuerdas para que se pueda fabricar.
     La durabilidad es el número de usos.
     '''
     def __init__(self, durabilidad:int=75, daño=17):
+        self.tipo = HerramientaType.MARTILLO
         self.durabilidad = durabilidad
         self.daño = daño
+        self.materiales = [["ramita", 3], ["roca", 3], ["cuerda", 2]]
 
     def __str__(self) -> str:
         return 'Martillo'
     
-    def demoler(self) -> bool:
-        assert self.durabilidad >= 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
-        self.durabilidad = self.durabilidad-1
-        return True
-        
-class TipoHacha(ABC):
-    def __init__(self, durabilidad, daño):
-        self.durabilidad = durabilidad
-        self.daño = daño
-    
-    def __str__(self) -> str:
-        return 'Hacha'
 
-class Hacha(TipoHacha):
+class Hacha(Herramienta):
     '''
     El hacha es una herramienta que se puede utilizar para talar árboles. Se puede crear
     al comienzo del juego con 1 ramita y 1 pedernal.
     '''
     def __init__(self, durabilidad:int=100, daño=27):
+        self.tipo = HerramientaType.HACHA
         self.durabilidad = durabilidad
         self.daño = daño
+        self.materiales = [["ramita", 1], ["pedernal", 1]]
     
     def __str__(self) -> str:
         return 'Hacha normal'
 
-class HachaLujo(TipoHacha):
+class HachaLujo(Herramienta):
     '''
     El Hacha de lujo es una versión del Hacha normal que tiene cuatro veces más durabilidad
     y requiere pepitas de oro en lugar de pedernal. Se necesitan 4 ramitas y 2 pepitas de oro
     para fabricar.
     '''
     def __init__(self, durabilidad:int=400, daño=27):
+        self.tipo = HerramientaType.HACHA_LUJO
         self.durabilidad = durabilidad
         self.daño = daño
+        self.materiales = [["ramita", 4], ["pepita oro", 2]]
         
     def __str__(self) -> str:
         return 'Hacha de Lujo'
@@ -223,14 +268,6 @@ class Fogata:
     # Objetivo: Usar polimorfismo para obtener el tiempo de cocción y simplificar el método. Trata de
     # usar una interface con al menos los atributos: nombre, tiempo_coccion, cocido
 
-    class Alimento(ABC):
-        def __init__(self, nombre, tiempo_coccion):
-            self.nombre = nombre
-            self.tiempo_coccion = tiempo_coccion
-            self.cocido = False
-        def tiempo_coccion(self):
-            return self.tiempo_coccion
-
     def cocinar(self, alimento:object) -> None:
         '''
         Permite cocinar un alimento crudo en la fogata. Regresa el mismo alimento pero cocinado.
@@ -241,13 +278,15 @@ class Fogata:
         #     sleep(5)
 
         if alimento.cocido == False:
+            print(f'cocinando {alimento.nombre}')
             sleep(alimento.tiempo_coccion)
             alimento.cocido = True
+            print(f'{alimento.nombre} cocido')
 
 if __name__ == '__main__':
     # Personajes
     wilson = Personaje('Wilson')
-
+    
     # Items
     backpack = Mochila('Morral chico', 10)
     backpack.recoger('ramita')
@@ -259,13 +298,31 @@ if __name__ == '__main__':
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
     backpack.recoger('cuerda')
-    
     print(backpack)
 
     # Fabrica
-    backpack.fabricar('martillo')
-    backpack.fabricar('hacha')
-    backpack.fabricar('hacha_lujo')
+    backpack.fabricar(Martillo())
+
+    #Items 
+    backpack.recoger('ramita')
+    backpack.recoger('pedernal')
+    print(backpack)
+    #Fabrica
+    backpack.fabricar(Hacha())
+    print(backpack)
+
+    #Items 
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('ramita')
+    backpack.recoger('pepita oro')
+    backpack.recoger('pepita oro')
+    print(backpack)
+
+    backpack.fabricar(HachaLujo())
+
+    print(backpack)
 
     # ---------------------------------------------------------------------------------------------
     # * RETO
@@ -274,8 +331,10 @@ if __name__ == '__main__':
     # Objetivo: Agregar al menos dos alimentos que se puedan cocinar en la fogata. Crear una fogata,
     # Cocinar los alimentos en la fogata y comer los alimentos.
     # 
-    malvavisco = Alimento()
+    malvavisco = Alimento('malvavisco', 2)
+    beef = Alimento('beef', 5)
     hoguera = Fogata()
-    #hoguera.cocinar(malvavisco)
+    hoguera.cocinar(malvavisco)
+    hoguera.cocinar(beef)
     # Listamos los articulos en nuestra mochila
     print(backpack)
