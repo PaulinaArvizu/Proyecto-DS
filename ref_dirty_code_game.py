@@ -251,6 +251,30 @@ class HachaLujo(Herramienta):
     def __str__(self) -> str:
         return 'Hacha de Lujo'
 
+class Cordero(Alimento):
+    def __init__(self):
+        self.nombre = 'cordero'
+        self.tiempo_coccion = 2
+        self.cocido = False
+    def tiempo_coccion(self):
+        return self.tiempo_coccion
+    
+class Beef(Alimento):
+    def __init__(self):
+        self.nombre = 'beef'
+        self.tiempo_coccion = 5
+        self.cocido = False
+    def tiempo_coccion(self):
+        return self.tiempo_coccion
+    
+class Malvavisco(Alimento):
+    def __init__(self):
+        self.nombre = 'malvavisco'
+        self.tiempo_coccion = 1
+        self.cocido = False
+    def tiempo_coccion(self):
+        return self.tiempo_coccion
+
 class Fogata:
     '''
     Una fogata es la clave para la supervivencia básica en el mundo. Aporta luz, calor y permite
@@ -271,7 +295,7 @@ class Fogata:
     # Objetivo: Usar polimorfismo para obtener el tiempo de cocción y simplificar el método. Trata de
     # usar una interface con al menos los atributos: nombre, tiempo_coccion, cocido
 
-    def cocinar(self, alimento:object) -> None:
+    def cocinar(self, alimento:Alimento) -> None:
         '''
         Permite cocinar un alimento crudo en la fogata. Regresa el mismo alimento pero cocinado.
         '''
@@ -279,7 +303,7 @@ class Fogata:
         #     sleep(2)
         # elif alimento == 'beef' and alimento.cocido == False:
         #     sleep(5)
-
+        
         if alimento.cocido == False:
             print(f'cocinando {alimento.nombre}')
             sleep(alimento.tiempo_coccion)
@@ -334,10 +358,8 @@ if __name__ == '__main__':
     # Objetivo: Agregar al menos dos alimentos que se puedan cocinar en la fogata. Crear una fogata,
     # Cocinar los alimentos en la fogata y comer los alimentos.
     # 
-    malvavisco = Alimento('malvavisco', 2)
-    beef = Alimento('beef', 5)
     hoguera = Fogata()
-    hoguera.cocinar(malvavisco)
-    hoguera.cocinar(beef)
+    hoguera.cocinar(Malvavisco())
+    hoguera.cocinar(Beef())
     # Listamos los articulos en nuestra mochila
     print(backpack)
