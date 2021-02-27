@@ -10,6 +10,7 @@
 from __future__ import annotations
 from abc import ABC
 from time import sleep
+from enum import Enum
 
 class Personaje:
     def __init__(self, nombre:str):
@@ -30,6 +31,11 @@ class Alimento(ABC):
         self.cocido = False
     def tiempo_coccion(self):
         return self.tiempo_coccion
+
+class HerramientaType(Enum): #Para eliminar los strings de herramientas, podria ser de valor hacerlo tambien para los materiales/items
+    HACHA_LUJO = "hacha_lujo"
+    HACHA = "hacha"
+    MARTILLO = "martillo"
 
 class Mochila:
     '''
@@ -75,7 +81,7 @@ class Mochila:
             raise ValueError(f'Se alcanzo la capacidad máxima de tu mochila, {self._max_items} en total')
     
     def has_capacity(self) -> bool:
-        cuenta = 0;
+        cuenta = 0
         for x in self.items:
             cuenta += x[1]
         return cuenta < self._max_items
@@ -106,31 +112,25 @@ class Mochila:
     # Existe código que se repite constantemente
     # Objetivo: Evitar duplicidad de código en cada una de las ramas de las condicionales
     #
-    def fabricar(self, herramienta) -> bool:
+    def fabricar(self, herramienta:Herramienta) -> bool:
         '''
         Fabricar herramientas a través de los artículos en tu inventario. Regresa True si se pudo
         fabricar la herramienta
         '''
-        if herramienta == 'martillo' and self.es_fabricable('martillo'):
-            self.tipo_martillo = Martillo()
-            self.quitar_item('ramita', 3)
-            self.quitar_item('roca', 3)
-            self.quitar_item('cuerda', 2)
-            return True
-
-        if herramienta == 'hacha' and self.es_fabricable('hacha'):
-            self.tipo_hacha = Hacha()
-            self.quitar_item('ramita', 1)
-            self.quitar_item('pedernal', 1)
-            return True
-
-        if herramienta == 'hacha_lujo' and self.es_fabricable('hacha_lujo'):
-            self.tipo_hacha = HachaLujo()
-            self.quitar_item('ramita', 4)
-            self.quitar_item('pepita oro', 2)
-            return True
-        else:
+        
+        materiales = herramienta.materiales
+        
+        if not (self.es_fabricable(materiales)):
             return False
+        
+        if(herramienta.tipo == HerramientaType.MARTILLO):
+            self.tipo_martillo = str(herramienta)
+        else:
+            self.tipo_hacha = str(herramienta)
+        for material in materiales:
+            self.quitar_item(material[0], material[1])
+        return True
+        
     
 
     def quitar_item(self, item, cantidad):
@@ -147,14 +147,20 @@ class Mochila:
                 return x[1]
         return 0
 
-    def es_fabricable(self, herramienta) -> bool:
-        if herramienta == 'martillo':
-            return self.contar_item('ramita') >= 3 and self.contar_item('roca') >= 3 and self.contar_item('cuerda') >= 2
-        if herramienta == 'hacha':
-            return self.contar_item('ramita') >= 1 and self.contar_item('pedernal') >= 1
-        if herramienta == 'hacha_lujo':
-            return self.contar_item('ramita') >= 4 and self.contar_item('pepita oro') >= 2
-        return False
+    def es_fabricable(self, materiales) -> bool:
+        
+        for material in materiales:
+            if self.contar_item(material[0]) < material[1]:
+                return False
+        return True
+        
+        # if herramienta == HerramientaType.MARTILLO:
+        #     return self.contar_item('ramita') >= 3 and self.contar_item('roca') >= 3 and self.contar_item('cuerda') >= 2
+        # if herramienta == HerramientaType.HACHA:
+        #     return self.contar_item('ramita') >= 1 and self.contar_item('pedernal') >= 1
+        # if herramienta == HerramientaType.HACHA_LUJO:
+        #     return self.contar_item('ramita') >= 4 and self.contar_item('pepita oro') >= 2
+        # return False
 
 
     
@@ -183,53 +189,64 @@ class Mochila:
 # Objetivo: Agrega el metodo "demoler" con un "assert" el cual suponga que se tiene al menos
 # 1 de durabilidad antes de ejecutar la acción.
 #
-class Martillo:
+
+class Herramienta(ABC): #Es mejor hacer una clase herramienta que solo un TipoHacha
+    def __init__(self, durabilidad, daño):
+        self.tipo = ''
+        self.durabilidad = durabilidad
+        self.daño = daño
+        self.materiales = []
+    
+    def __str__(self) -> str:
+        return 'Herramienta'
+    
+    def demoler(self) -> bool:
+        assert self.durabilidad >= 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
+        self.durabilidad = self.durabilidad-1
+        return True
+    
+    
+class Martillo(Herramienta):
     '''
     El martillo es una herramienta que se puede utilizar para demoler estructuras.
     El martillo requiere 3 rocas, 3 ramitas y 2 cuerdas para que se pueda fabricar.
     La durabilidad es el número de usos.
     '''
     def __init__(self, durabilidad:int=75, daño=17):
+        self.tipo = HerramientaType.MARTILLO
         self.durabilidad = durabilidad
         self.daño = daño
+        self.materiales = [["ramita", 3], ["roca", 3], ["cuerda", 2]]
 
     def __str__(self) -> str:
         return 'Martillo'
     
-    def demoler(self) -> bool:
-        assert self.durabilidad >= 1, "El martillo no tiene suficiente durabilidad" #assert hace una condicional, si no se cumple regresa un Asserition error
-        self.durabilidad = self.durabilidad-1
-        return True
-        
-class TipoHacha(ABC):
-    def __init__(self, durabilidad, daño):
-        self.durabilidad = durabilidad
-        self.daño = daño
-    
-    def __str__(self) -> str:
-        return 'Hacha'
 
-class Hacha(TipoHacha):
+class Hacha(Herramienta):
     '''
     El hacha es una herramienta que se puede utilizar para talar árboles. Se puede crear
     al comienzo del juego con 1 ramita y 1 pedernal.
     '''
     def __init__(self, durabilidad:int=100, daño=27):
+        self.tipo = HerramientaType.HACHA
         self.durabilidad = durabilidad
         self.daño = daño
+        self.materiales = [["ramita", 1], ["pedernal", 1]]
     
     def __str__(self) -> str:
         return 'Hacha normal'
 
-class HachaLujo(TipoHacha):
+class HachaLujo(Herramienta):
     '''
     El Hacha de lujo es una versión del Hacha normal que tiene cuatro veces más durabilidad
     y requiere pepitas de oro en lugar de pedernal. Se necesitan 4 ramitas y 2 pepitas de oro
     para fabricar.
     '''
     def __init__(self, durabilidad:int=400, daño=27):
+        self.tipo = HerramientaType.HACHA_LUJO
         self.durabilidad = durabilidad
         self.daño = daño
+        self.materiales = [["ramita", 4], ["pepita oro", 2]]
         
     def __str__(self) -> str:
         return 'Hacha de Lujo'
@@ -272,7 +289,7 @@ class Fogata:
 if __name__ == '__main__':
     # Personajes
     wilson = Personaje('Wilson')
-
+    
     # Items
     backpack = Mochila('Morral chico', 10)
     backpack.recoger('ramita')
@@ -287,14 +304,14 @@ if __name__ == '__main__':
     print(backpack)
 
     # Fabrica
-    backpack.fabricar('martillo')
+    backpack.fabricar(Martillo())
 
     #Items 
     backpack.recoger('ramita')
     backpack.recoger('pedernal')
     print(backpack)
     #Fabrica
-    backpack.fabricar('hacha')
+    backpack.fabricar(Hacha())
     print(backpack)
 
     #Items 
@@ -306,7 +323,9 @@ if __name__ == '__main__':
     backpack.recoger('pepita oro')
     print(backpack)
 
-    backpack.fabricar('hacha_lujo')
+    backpack.fabricar(HachaLujo())
+
+    print(backpack)
 
     print(backpack)
 
