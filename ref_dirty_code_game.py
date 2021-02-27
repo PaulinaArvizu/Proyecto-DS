@@ -123,7 +123,10 @@ class Mochila:
         if not (self.es_fabricable(materiales)):
             return False
         
-        self.recoger(str(herramienta))
+        if(herramienta.tipo == HerramientaType.MARTILLO):
+            self.tipo_martillo = str(herramienta)
+        else:
+            self.tipo_hacha = str(herramienta)
         for material in materiales:
             self.quitar_item(material[0], material[1])
         return True
