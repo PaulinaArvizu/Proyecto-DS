@@ -190,6 +190,7 @@ class Mochila:
 # 1 de durabilidad antes de ejecutar la acción.
 #
 
+# Generalizacion: pullup method y extract superclass
 class Herramienta(ABC): #Es mejor hacer una clase herramienta que solo un TipoHacha
     def __init__(self, durabilidad, daño):
         self.tipo = ''
